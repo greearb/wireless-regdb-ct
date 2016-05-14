@@ -6,7 +6,7 @@ country 00:
 	# Channel 14. Only JP enables this and for 802.11b only
 	(2474 - 2494 @ 20), (20), NO-IR, NO-OFDM
 	# 4.9Ghz band --Ben
-	(4910 - 5170 @ 5), (23)
+	(4910 - 5170 @ 20), (23)
 	# Channel 36 - 48
 	(5170 - 5250 @ 80), (20), NO-IR, AUTO-BW
 	# Channel 52 - 64
@@ -1208,7 +1208,7 @@ country UG: DFS-FCC
 country US: DFS-FCC
 	(2402 - 2472 @ 40), (30)
 	# 4.9Ghz band --Ben
-	(4910 - 5170 @ 5), (23)
+	(4910 - 5170 @ 20), (23)
 	# 5.15 ~ 5.25 GHz: 30 dBm for master mode, 23 dBm for clients
 	(5170 - 5250 @ 80), (23), AUTO-BW
 	(5250 - 5330 @ 80), (23), DFS, AUTO-BW
