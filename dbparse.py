@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
+from functools import total_ordering
 import sys, math
+from math import ceil, log
+from collections import defaultdict, OrderedDict
 
 # must match <linux/nl80211.h> enum nl80211_reg_rule_flags
 
@@ -25,6 +28,40 @@ dfs_regions = {
     'DFS-JP':		3,
 }
 
+@total_ordering
+
+class WmmRule(object):
+
+    def __init__(self, vo_c, vi_c, be_c, bk_c, vo_ap, vi_ap, be_ap, bk_ap):
+        self.vo_c = vo_c
+        self.vi_c = vi_c
+        self.be_c = be_c
+        self.bk_c = bk_c
+        self.vo_ap = vo_ap
+        self.vi_ap = vi_ap
+        self.be_ap = be_ap
+        self.bk_ap = bk_ap
+
+    def _as_tuple(self):
+        return (self.vo_c, self.vi_c, self.be_c, self.bk_c,
+                self.vo_ap, self.vi_ap, self.be_ap, self.bk_ap)
+
+    def __eq__(self, other):
+        if other is None:
+            return False
+        return (self._as_tuple() == other._as_tuple())
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def __lt__(self, other):
+        if other is None:
+            return False
+        return (self._as_tuple() < other._as_tuple())
+
+    def __hash__(self):
+        return hash(self._as_tuple())
+
 class FreqBand(object):
     def __init__(self, start, end, bw, comments=None):
         self.start = start
@@ -32,41 +69,49 @@ class FreqBand(object):
         self.maxbw = bw
         self.comments = comments or []
 
-    def __cmp__(self, other):
-        s = self
-        o = other
-        if not isinstance(o, FreqBand):
-            return False
-        return cmp((s.start, s.end, s.maxbw), (o.start, o.end, o.maxbw))
+    def _as_tuple(self):
+        return (self.start, self.end, self.maxbw)
+
+    def __eq__(self, other):
+        return (self._as_tuple() == other._as_tuple())
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def __lt__(self, other):
+        return (self._as_tuple() < other._as_tuple())
 
     def __hash__(self):
-        s = self
-        return hash((s.start, s.end, s.maxbw))
+        return hash(self._as_tuple())
 
     def __str__(self):
         return '<FreqBand %.3f - %.3f @ %.3f>' % (
                   self.start, self.end, self.maxbw)
 
+@total_ordering
 class PowerRestriction(object):
     def __init__(self, max_ant_gain, max_eirp, comments = None):
         self.max_ant_gain = max_ant_gain
         self.max_eirp = max_eirp
         self.comments = comments or []
 
-    def __cmp__(self, other):
-        s = self
-        o = other
-        if not isinstance(o, PowerRestriction):
-            return False
-        return cmp((s.max_ant_gain, s.max_eirp),
-                   (o.max_ant_gain, o.max_eirp))
+    def _as_tuple(self):
+        return (self.max_ant_gain, self.max_eirp)
+
+    def __eq__(self, other):
+        return (self._as_tuple() == other._as_tuple())
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def __lt__(self, other):
+        return (self._as_tuple() < other._as_tuple())
+
+    def __hash__(self):
+        return hash(self._as_tuple())
 
     def __str__(self):
         return '<PowerRestriction ...>'
-
-    def __hash__(self):
-        s = self
-        return hash((s.max_ant_gain, s.max_eirp))
 
 class DFSRegionError(Exception):
     def __init__(self, dfs_region):
@@ -76,12 +121,15 @@ class FlagError(Exception):
     def __init__(self, flag):
         self.flag = flag
 
+@total_ordering
 class Permission(object):
-    def __init__(self, freqband, power, flags):
+    def __init__(self, freqband, power, flags, wmmrule):
         assert isinstance(freqband, FreqBand)
         assert isinstance(power, PowerRestriction)
+        assert isinstance(wmmrule, WmmRule) or wmmrule is None
         self.freqband = freqband
         self.power = power
+        self.wmmrule = wmmrule
         self.flags = 0
         for flag in flags:
             if not flag in flag_definitions:
@@ -90,26 +138,33 @@ class Permission(object):
         self.textflags = flags
 
     def _as_tuple(self):
-        return (self.freqband, self.power, self.flags)
+        return (self.freqband, self.power, self.flags, self.wmmrule)
 
-    def __cmp__(self, other):
-        if not isinstance(other, Permission):
-            return False
-        return cmp(self._as_tuple(), other._as_tuple())
+    def __eq__(self, other):
+        return (self._as_tuple() == other._as_tuple())
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def __lt__(self, other):
+        return (self._as_tuple() < other._as_tuple())
 
     def __hash__(self):
         return hash(self._as_tuple())
+
+    def __str__(self):
+        return str(self.freqband) + str(self.power) + str(self.wmmrule)
 
 class Country(object):
     def __init__(self, dfs_region, permissions=None, comments=None):
         self._permissions = permissions or []
         self.comments = comments or []
-	self.dfs_region = 0
+        self.dfs_region = 0
 
-	if dfs_region:
-		if not dfs_region in dfs_regions:
-		    raise DFSRegionError(dfs_region)
-		self.dfs_region = dfs_regions[dfs_region]
+        if dfs_region:
+            if not dfs_region in dfs_regions:
+                raise DFSRegionError(dfs_region)
+            self.dfs_region = dfs_regions[dfs_region]
 
     def add(self, perm):
         assert isinstance(perm, Permission)
@@ -233,6 +288,61 @@ class DBParser(object):
         self._powerrev[p] = pname
         self._powerline[pname] = self._lineno
 
+    def _parse_wmmrule(self, line):
+        regions = line[:-1].strip()
+        if not regions:
+            self._syntax_error("'wmmrule' keyword must be followed by region")
+
+        regions = regions.split(',')
+
+        self._current_regions = {}
+        for region in regions:
+            if region in self._wmm_rules:
+                self._warn("region %s was added already to wmm rules" % region)
+            self._current_regions[region] = 1
+        self._comments = []
+
+    def _validate_input(self, cw_min, cw_max, aifsn, cot):
+        if  cw_min < 1:
+            self._syntax_error("Invalid cw_min value (%d)" % cw_min)
+        if cw_max < 1:
+            self._syntax_error("Invalid cw_max value (%d)" % cw_max)
+        if cw_min > cw_max:
+            self._syntax_error("Inverted contention window (%d - %d)" %
+                    (cw_min, cw_max))
+        if not (bin(cw_min + 1).count('1') == 1 and cw_min < 2**15):
+            self._syntax_error("Invalid cw_min value should be power of 2 - 1 (%d)"
+                    % cw_min)
+        if not (bin(cw_max + 1).count('1') == 1 and cw_max < 2**15):
+            self._syntax_error("Invalid cw_max value should be power of 2 - 1 (%d)"
+                    % cw_max)
+        if aifsn < 1:
+            self._syntax_error("Invalid aifsn value (%d)" % aifsn)
+        if cot < 0:
+            self._syntax_error("Invalid cot value (%d)" % cot)
+
+
+    def _validate_size(self, var, bytcnt):
+        return bytcnt < ceil(len(bin(var)[2:]) / 8.0)
+
+    def _parse_wmmrule_item(self, line):
+        bytcnt = (2.0, 2.0, 1.0, 2.0)
+        try:
+            ac, cval = line.split(':')
+            if not ac:
+                self._syntax_error("wmm item must have ac prefix")
+        except ValueError:
+                self._syntax_error("access category must be followed by colon")
+        p = tuple([int(v.split('=', 1)[1]) for v in cval.split(',')])
+        self._validate_input(*p)
+        for v, b in zip(p, bytcnt):
+            if self._validate_size(v, b):
+                self._syntax_error("unexpected input size expect %d got %d"
+                        % (b, v))
+
+            for r in self._current_regions:
+                self._wmm_rules[r][ac] = p
+
     def _parse_country(self, line):
         try:
             cname, cvals= line.split(':', 1)
@@ -248,6 +358,7 @@ class DBParser(object):
         for cname in cnames:
             if len(cname) != 2:
                 self._warn("country '%s' not alpha2" % cname)
+            cname = cname.encode('ascii')
             if not cname in self._countries:
                 self._countries[cname] = Country(dfs_region, comments=self._comments)
             self._current_countries[cname] = self._countries[cname]
@@ -290,6 +401,15 @@ class DBParser(object):
             line = line.split(',')
             pname = line[0]
             flags = line[1:]
+        w = None
+        if flags and 'wmmrule' in flags[-1]:
+            try:
+                region = flags.pop().split('=', 1)[1]
+                if region not in self._wmm_rules.keys():
+                    self._syntax_error("No wmm rule for %s" % region)
+            except IndexError:
+                self._syntax_error("flags is empty list or no region was found")
+            w = WmmRule(*self._wmm_rules[region].values())
 
         if not bname in self._bands:
             self._syntax_error("band does not exist")
@@ -303,10 +423,10 @@ class DBParser(object):
         b = self._bands[bname]
         p = self._power[pname]
         try:
-            perm = Permission(b, p, flags)
-        except FlagError, e:
+            perm = Permission(b, p, flags, w)
+        except FlagError as e:
             self._syntax_error("Invalid flag '%s'" % e.flag)
-        for cname, c in self._current_countries.iteritems():
+        for cname, c in self._current_countries.items():
             if perm in c:
                 self._warn('Rule "%s, %s" added to "%s" twice' % (
                               bname, pname, cname))
@@ -315,6 +435,7 @@ class DBParser(object):
 
     def parse(self, f):
         self._current_countries = None
+        self._current_regions = None
         self._bands = {}
         self._power = {}
         self._countries = {}
@@ -326,6 +447,7 @@ class DBParser(object):
         self._powerdup = {}
         self._bandline = {}
         self._powerline = {}
+        self._wmm_rules = defaultdict(lambda: OrderedDict())
 
         self._comments = []
 
@@ -337,6 +459,7 @@ class DBParser(object):
                 self._comments.append(line[1:].strip())
             line = line.replace(' ', '').replace('\t', '')
             if not line:
+                self._current_regions = None
                 self._comments = []
             line = line.split('#')[0]
             if not line:
@@ -344,23 +467,35 @@ class DBParser(object):
             if line[0:4] == 'band':
                 self._parse_band(line[4:])
                 self._current_countries = None
+                self._current_regions = None
                 self._comments = []
             elif line[0:5] == 'power':
                 self._parse_power(line[5:])
                 self._current_countries = None
+                self._current_regions = None
                 self._comments = []
             elif line[0:7] == 'country':
                 self._parse_country(line[7:])
                 self._comments = []
+                self._current_regions = None
             elif self._current_countries is not None:
+                self._current_regions = None
                 self._parse_country_item(line)
+                self._comments = []
+            elif line[0:7] == 'wmmrule':
+                self._parse_wmmrule(line[7:])
+                self._current_countries = None
+                self._comments = []
+            elif self._current_regions is not None:
+                self._parse_wmmrule_item(line)
+                self._current_countries = None
                 self._comments = []
             else:
                 self._syntax_error("Expected band, power or country definition")
 
         countries = self._countries
         bands = {}
-        for k, v in self._bands.iteritems():
+        for k, v in self._bands.items():
             if k in self._bands_used:
                 bands[self._banddup[k]] = v
                 continue
@@ -369,7 +504,7 @@ class DBParser(object):
                 self._lineno = self._bandline[k]
                 self._warn('Unused band definition "%s"' % k)
         power = {}
-        for k, v in self._power.iteritems():
+        for k, v in self._power.items():
             if k in self._power_used:
                 power[self._powerdup[k]] = v
                 continue
