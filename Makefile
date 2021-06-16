@@ -57,7 +57,7 @@ mrproper: clean maintainer-clean
 
 regulatory.bin: db.txt $(REGDB_PRIVKEY) $(REGDB_PUBKEY)
 	@echo Generating $@ digitally signed by $(REGDB_AUTHOR)...
-	./db2bin.py regulatory.bin db.txt $(REGDB_PRIVKEY)
+	./db2bin.py regulatory.bin db.txt $(REGDB_PRIVKEY) || python3 ./db2bin.py regulatory.bin db.txt $(REGDB_PRIVKEY)
 
 regulatory.db: db.txt db2fw.py
 	@echo "Generating $@"
