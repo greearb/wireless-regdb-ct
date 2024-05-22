@@ -1209,12 +1209,15 @@ country MK: DFS-ETSI
 	# 60 GHz band channels 1-4, ref: Etsi En 302 567
 	(57000 - 66000 @ 2160), (40)
 
+# Communications Regulatory Commission- CRC released Amendment to Resolution No. 37 of 2020
+# https://www.crc.gov.mn/storage/PDF/2022/2022-togtool1.pdf
 country MN: DFS-FCC
 	(2402 - 2482 @ 40), (20)
 	(5170 - 5250 @ 80), (24), AUTO-BW
 	(5250 - 5330 @ 80), (24), DFS, AUTO-BW
 	(5490 - 5730 @ 160), (24), DFS
 	(5735 - 5835 @ 80), (30)
+	(5925 - 6425 @ 320), (100mW)
 
 country MO: DFS-FCC
 	(2402 - 2482 @ 40), (23)
