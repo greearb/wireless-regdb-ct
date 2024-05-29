@@ -1702,12 +1702,17 @@ country TG: DFS-ETSI
 	(5250 - 5330 @ 40), (20), DFS
 	(5490 - 5710 @ 40), (27), DFS
 
+# Source:
+# https://ratchakitcha.soc.go.th/documents/140D100S0000000004000.pdf
+# https://ratchakitcha.soc.go.th/documents/140D100S0000000004200.pdf
+# https://ratchakitcha.soc.go.th/documents/140D100S0000000004300.pdf
 country TH: DFS-FCC
 	(2402 - 2482 @ 40), (20)
 	(5170 - 5250 @ 80), (17), AUTO-BW
 	(5250 - 5330 @ 80), (24), DFS, AUTO-BW
 	(5490 - 5730 @ 160), (24), DFS
 	(5735 - 5835 @ 80), (30)
+	(5925 - 6425 @ 320), (250 mW), NO-OUTDOOR
 
 country TN: DFS-ETSI
 	(2402 - 2482 @ 40), (20)
