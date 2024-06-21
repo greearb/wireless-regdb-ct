@@ -434,12 +434,16 @@ country CO: DFS-FCC
 	(5735 - 5835 @ 80), (30)
 	(5925 - 7125 @ 320), (12), NO-OUTDOOR
 
+# Source:
+# https://storage.googleapis.com/eleoscompliance1.appspot.com/public/PNAF%20modificaci%C3%B3n%20ALCA87_30_04_2021.pdf
 country CR: DFS-FCC
-	(2402 - 2482 @ 40), (20)
-	(5170 - 5250 @ 20), (17)
-	(5250 - 5330 @ 20), (24), DFS
-	(5490 - 5730 @ 20), (24), DFS
-	(5735 - 5835 @ 20), (30)
+	(2402 - 2482 @ 40), (36)
+	(5170 - 5250 @ 20), (30)
+	(5250 - 5330 @ 20), (30), DFS
+	(5490 - 5730 @ 20), (30), DFS
+	(5735 - 5835 @ 20), (36)
+	(5875 - 5925 @ 20), (30)
+	(5925 - 7125 @ 320), (30), NO-OUTDOOR
 
 # Source:
 # https://www.mincom.gob.cu/es/marco-legal
