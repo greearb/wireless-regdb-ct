@@ -985,11 +985,17 @@ country JP: DFS-JP
 	# ref: http://www.arib.or.jp/english/html/overview/doc/1-STD-T74v1_1.pdf
 	(57000 - 66000 @ 2160), (10 mW)
 
-country KE: DFS-JP
-	(2402 - 2482 @ 40), (20)
-	(5170 - 5250 @ 80), (23)
-	(5490 - 5570 @ 80), (30), DFS
-	(5735 - 5775 @ 40), (23)
+# Source:
+# https://www.ca.go.ke/sites/default/files/2023-06/Guidelines-on-the-Use-of-Radiofrequency-Spectrum-by-Short-Range-Devices-2022.pdf
+# ETSI EN 301 893: https://www.etsi.org/deliver/etsi_en/301800_301899/301893/02.01.01_60/en_301893v020101p.pdf
+# ETSI EN 302 502: https://www.etsi.org/deliver/etsi_en/302500_302599/302502/02.01.01_60/en_302502v020101p.pdf
+country KE: DFS-ETSI
+	(2400 - 2483.5 @ 40), (2000 mW)
+	(5150 - 5250 @ 80), (17), AUTO-BW
+	(5250 - 5350 @ 80), (17), DFS, AUTO-BW
+	(5470 - 5725 @ 80), (24), DFS
+	(5725 - 5875 @ 40), (24), DFS
+	(5925 - 6425 @ 320), (23), NO-OUTDOOR
 
 country KH: DFS-ETSI
 	(2402 - 2482 @ 40), (20)
