@@ -1355,6 +1355,17 @@ country MY: DFS-FCC
 	(5735 - 5835 @ 80), (1000 mW)
 	(5925 - 6425 @ 320), (200 mW), NO-OUTDOOR
 
+# Source:
+# https://www.cran.na/yglilidy/2023/04/GG-8060-dated-3-April-2023.pdf
+country NA: DFS-ETSI
+	(2400 - 2483.5 @ 40), (100 mW)
+	(5150 - 5250 @ 80), (20), AUTO-BW, NO-OUTDOOR
+	(5250 - 5350 @ 80), (20), DFS, AUTO-BW, NO-OUTDOOR
+	(5470 - 5725 @ 160), (21), DFS
+	(5725 - 5875 @ 80), (24), DFS
+	(5925 - 6425 @ 320), (23), NO-OUTDOOR
+	(57000 - 66000 @ 2160), (40), NO-OUTDOOR
+
 country NG: DFS-ETSI
 	(2402 - 2482 @ 40), (20)
 	(5250 - 5330 @ 80), (30), DFS
