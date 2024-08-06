@@ -280,11 +280,16 @@ country BG: DFS-ETSI
 	# II.H03 of the List, BDS EN 302 567-2
 	(57000 - 66000 @ 2160), (40)
 
-country BH: DFS-JP
-	(2402 - 2482 @ 40), (20)
-	(5170 - 5250 @ 20), (20)
-	(5250 - 5330 @ 20), (20), DFS
-	(5735 - 5835 @ 20), (20)
+# Source:
+# https://tra-website-prod-01.s3-me-south-1.amazonaws.com/Media/Documents/Publications/20240227160125242_dudbapc5_5dk.pdf
+# (via https://www.tra.org.bh/en/category/apply-for-type-approval)
+country BH: DFS-ETSI
+	(2400 - 2483.5 @ 40), (100 mW)
+	(5150 - 5350 @ 80), (200 mW), DFS, NO-OUTDOOR
+	(5470 - 5725 @ 80), (27), DFS
+	(5725 - 5875 @ 80), (24), DFS
+	(5925 - 6425 @ 320), (200 mW), NO-OUTDOOR
+	(57000 - 66000 @ 2160), (40), NO-OUTDOOR
 
 country BL: DFS-ETSI
 	(2402 - 2482 @ 40), (20)
