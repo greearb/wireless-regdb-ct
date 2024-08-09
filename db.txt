@@ -779,11 +779,18 @@ country GR: DFS-ETSI
 	# 60 GHz band channels 1-4 (ETSI EN 302 567)
 	(57000 - 66000 @ 2160), (40)
 
-country GT: DFS-FCC
-	(2402 - 2472 @ 40), (30)
-	(5170 - 5250 @ 80), (17), AUTO-BW
-	(5250 - 5330 @ 80), (23), DFS, AUTO-BW
-	(5735 - 5835 @ 80), (30)
+# Source:
+# https://sit.gob.gt/download/9685/tabla-nacional-de-atribucion-de-frecuencias/01WRXSS3QHSADNOSHDZ5HIWXE4TFFW3YIU/4.%20Tabla%20Nacional%20Atribuci%C3%B3n%20Frecuencias%20(Pies%20de%20P%C3%A1gina)
+country GT:
+	(2400 - 2483.5 @ 40), (500 mW)
+	(5150 - 5350 @ 80), (200 mW), NO-OUTDOOR
+	(5470 - 5725 @ 160), (250 mW), NO-OUTDOOR
+	(5725 - 5850 @ 160), (500 mW), NO-OUTDOOR
+	(5925 - 6425 @ 320), (200 mW), NO-OUTDOOR, AUTO-BW
+	(6425 - 6525 @ 320), (200 mW), NO-OUTDOOR, AUTO-BW
+	(6525 - 6875 @ 320), (150 mW), NO-OUTDOOR, AUTO-BW
+	(6875 - 7125 @ 320), (150 mW), NO-OUTDOOR, AUTO-BW
+	(57000 - 66000 @ 2160), (20 mW), NO-OUTDOOR
 
 country GU: DFS-FCC
 	(2402 - 2472 @ 40), (30)
