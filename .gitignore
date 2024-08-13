@@ -1,2 +1,9 @@
-key.priv.pem
-dbparse.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+
+.custom
+!wens.key.pub.pem
+!wens.x509.pem
+*.pem
+*.patch
