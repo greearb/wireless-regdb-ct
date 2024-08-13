@@ -1,0 +1,5 @@
+# Configuration for the `b4` tool
+# See https://b4.docs.kernel.org/en/latest/config.html
+[b4]
+    send-series-to = Chen-Yu Tsai <wens@kernel.org>
+    send-series-cc = linux-wireless@vger.kernel.org, wireless-regdb@lists.infradead.org
