@@ -905,14 +905,16 @@ country IE: DFS-ETSI
 # IL: https://www.gov.il/he/departments/legalInfo/telegraph_law
 # IL: official document (pdf): https://rfa.justice.gov.il/SearchPredefinedApi/Documents/IdngyMn~ojdQSrkxuAqfZqiM8c1foi3TSZQhp7OMszo=
 # IL: also available as unofficial word doc: https://www.nevo.co.il/Handlers/LawOpenDoc.ashx?id=199708
+# https://www.nevo.co.il/law_html/law01/502_483.htm#Seif9
 country IL: DFS-ETSI
-	(2402 - 2482 @ 40), (20)
+	(2400 - 2483.5 @ 40), (100 mW)
 	(5150 - 5250 @ 80), (200 mW), NO-OUTDOOR, AUTO-BW
-	(5250 - 5350 @ 80), (200 mW), NO-OUTDOOR, DFS, AUTO-BW
+	(5250 - 5350 @ 80), (100 mW), NO-OUTDOOR, DFS, AUTO-BW
 	# Table B List of conditions, row 63, indoor short range device without TPC (ETSI EN 301 893)
 	(5470 - 5725 @ 160), (500 mW), NO-OUTDOOR, DFS, AUTO-BW, wmmrule=ETSI
-	# Table B List of conditions, row 68, wireless device using 802.11a/n/ac protocol
-	(5725 - 5875 @ 80), (200 mW), AUTO-BW
+	# Table B List of conditions, row 68a
+	(5725 - 5875 @ 80), (25 mW), AUTO-BW
+	(5945 - 6425 @ 320), (200 mW), NO-OUTDOOR
 
 # Source:
 # https://dot.gov.in/spectrummanagement/delicensing-24-24835-ghz-band-gsr-45-e-5150-5350-ghz-gsr-46-e-and-5725-5875-ghz
