@@ -1466,10 +1466,12 @@ country NZ: DFS-ETSI
 	(57000 - 71000 @ 2160), (40)
 
 country OM: DFS-ETSI
-	(2402 - 2482 @ 40), (20)
-	(5170 - 5250 @ 80), (20), AUTO-BW
-	(5250 - 5330 @ 80), (20), DFS, AUTO-BW
-	(5490 - 5710 @ 160), (27), DFS
+	(2400 - 2483.5 @ 40), (100 mW), NO-OUTDOOR
+	(5170 - 5250 @ 80), (200 mW), AUTO-BW
+	(5250 - 5350 @ 80), (20), DFS, AUTO-BW
+	(5470 - 5725 @ 160), (27), DFS
+	(5925 - 6425 @ 320), (200 mW), NO-OUTDOOR
+	(57000 - 66000 @ 2160), (40), NO-OUTDOOR
 
 # Source:
 # http://www.asep.gob.pa/images/telecomunicaciones/Anexos/PNAF-dic2015.pdf
