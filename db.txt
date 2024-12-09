@@ -81,10 +81,13 @@ country AL: DFS-ETSI
 	# short range devices (ETSI EN 300 440-1)
 	(5725 - 5875 @ 80), (25 mW)
 
+# Source:
+# 2.4 GHz https://www.psrc.am/contents/document/4749
+# 5 GHz https://www.psrc.am/contents/document/11375
 country AM: DFS-ETSI
-	(2402 - 2482 @ 40), (20)
-	(5170 - 5250 @ 20), (18)
-	(5250 - 5330 @ 20), (18), DFS
+	(2400 - 2483.5 @ 40), (100 mW)
+	(5150 - 5350 @ 160), (17), NO-OUTDOOR, DFS
+	(5470 - 5875 @ 160), (17), NO-OUTDOOR, DFS
 
 country AN: DFS-ETSI
 	(2402 - 2482 @ 40), (20)
