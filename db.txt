@@ -1136,8 +1136,11 @@ country KR: DFS-JP
 	(5470 - 5725 @ 160), (20), DFS
 	(5725 - 5850 @ 80), (23)
 	# 6 GHz band - per MSIT Notice 2026-10
-	(5925 - 6425 @ 320), (18), NO-OUTDOOR, AUTO-BW
-	(6425 - 7125 @ 320), (15), NO-OUTDOOR, AUTO-BW
+	# NOTE:  CT adjusted:  Original values 18, 15 were for 20mhz
+	# limits since db.txt cannot properly deal with different bandwidths at this time.
+	# However, our users will normally use higher bandwidths, so increase txpower limits.
+	(5925 - 6425 @ 320), (24), NO-OUTDOOR, AUTO-BW
+	(6425 - 7125 @ 320), (27), NO-OUTDOOR, AUTO-BW
 	# 60 GHz band channels 1-4
 	(57000 - 66000 @ 2160), (43)
 
