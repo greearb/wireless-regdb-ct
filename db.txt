@@ -2089,7 +2089,8 @@ country US: DFS-FCC
 	# 6g band
 	# https://www.federalregister.gov/documents/2020/05/26/2020-11236/unlicensed-use-of-the-6ghz-band
 	# Removed NO-IR so we can test 6e AP mode. --Ben
-	(5925 - 7125 @ 320), (12), NO-OUTDOOR
+   # Increased txpower from (12) to (20). -- Dylan
+	(5925 - 7125 @ 320), (20), NO-OUTDOOR
 	# 60g band
 	# reference: section IV-D https://docs.fcc.gov/public/attachments/FCC-16-89A1.pdf
 	# channels 1-6 EIRP=40dBm(43dBm peak)
